@@ -23,18 +23,6 @@
         android:layout_weight="1"
         android:background="#F5F5F5" />
 
-<!--    &lt;!&ndash; Content area for social media posts &ndash;&gt;-->
-<!--    <ScrollView-->
-<!--        android:id="@+id/contentScrollView"-->
-<!--        android:layout_below="@id/header"-->
-<!--        android:layout_above="@+id/navigationBar"-->
-<!--        android:layout_width="match_parent"-->
-<!--        android:layout_height="0dp"-->
-<!--        android:layout_weight="1">-->
-
-<!--        &lt;!&ndash; Add your post layout here (repeating for each post) &ndash;&gt;-->
-<!--    </ScrollView>-->
-
     <!-- Bottom Navigation Bar -->
     <LinearLayout
         android:id="@+id/navigationBar"
@@ -45,31 +33,31 @@
         android:background="#FFFFFF"
         android:padding="10dp">
 
-<!--        <ImageButton-->
-<!--            android:id="@+id/nav_home"-->
-<!--            android:layout_width="0dp"-->
-<!--            android:layout_height="wrap_content"-->
-<!--            android:layout_weight="1"-->
-<!--            android:background="@color/white"-->
-<!--            android:contentDescription="Home"-->
-<!--            android:src="@drawable/ic_home" />-->
+        <ImageButton
+            android:id="@+id/nav_home"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:src="@drawable/ic_home"
+            android:background="?android:attr/selectableItemBackground"
+            android:contentDescription="Home" />
 
-<!--        <ImageButton-->
-<!--            android:id="@+id/nav_search"-->
-<!--            android:layout_width="0dp"-->
-<!--            android:layout_height="wrap_content"-->
-<!--            android:layout_weight="1"-->
-<!--            android:src="@drawable/ic_search"-->
-<!--            android:background="?android:attr/selectableItemBackground"-->
-<!--            android:contentDescription="Search" />-->
+        <ImageButton
+            android:id="@+id/nav_search"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:src="@drawable/ic_search"
+            android:background="?android:attr/selectableItemBackground"
+            android:contentDescription="Search" />
 
-<!--        <ImageButton-->
-<!--            android:id="@+id/nav_calendar"-->
-<!--            android:layout_width="0dp"-->
-<!--            android:layout_height="wrap_content"-->
-<!--            android:layout_weight="1"-->
-<!--            android:src="@drawable/ic_calendar"-->
-<!--            android:background="?android:attr/selectableItemBackground"-->
-<!--            android:contentDescription="Calendar" />-->
+        <ImageButton
+            android:id="@+id/nav_calendar"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:src="@drawable/ic_calendar"
+            android:background="?android:attr/selectableItemBackground"
+            android:contentDescription="Calendar" />
     </LinearLayout>
 </RelativeLayout>

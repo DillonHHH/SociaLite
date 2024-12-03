@@ -46,3 +46,4 @@ data class Event(
         return BitmapFactory.decodeByteArray(decodedString, 0, decodedString.size)
     }
 }
+

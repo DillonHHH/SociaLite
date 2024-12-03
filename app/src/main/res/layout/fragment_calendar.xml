@@ -3,13 +3,29 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    android:gravity="center"
-    android:padding="16dp">
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <com.applandeo.materialcalendarview.CalendarView
+        android:id="@+id/calendarView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:eventsEnabled="true"
+        app:type="one_day_picker"/>
 
     <TextView
-        android:layout_width="wrap_content"
+        android:id="@+id/selectedDateText"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Calendar Screen"
-        android:textSize="24sp"
-        android:textColor="#333333" />
+        android:padding="16dp"
+        android:textSize="16sp"
+        android:textStyle="bold" />
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/eventTitleRecyclerView"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:padding="8dp"
+        android:scrollbars="vertical"/>
+
 </LinearLayout>
