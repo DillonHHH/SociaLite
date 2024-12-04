@@ -1,19 +1,12 @@
 package com.socialite.socialite.repository
 
-import android.content.Context
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.util.Log
 import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.PrimaryKey
-import id.zelory.compressor.Compressor
-import id.zelory.compressor.constraint.format
-import id.zelory.compressor.constraint.quality
-import id.zelory.compressor.constraint.resolution
-import id.zelory.compressor.constraint.size
 import java.io.ByteArrayOutputStream
-import java.io.File
 import kotlin.io.encoding.Base64
 import kotlin.io.encoding.ExperimentalEncodingApi
 
@@ -27,8 +20,13 @@ data class Comment (
 ){
     constructor(): this(null, null, "","", null)
 
+    // required for deserialization from database
+    fun setImage(image: String) {
+        this.image = image
+    }
+
     @OptIn(ExperimentalEncodingApi::class)
-    suspend fun setImage(context: Context, image: Bitmap) {
+    fun setImageWithBitmap(image: Bitmap) {
 
         val outputStream = ByteArrayOutputStream()
         image.compress(Bitmap.CompressFormat.JPEG, 50, outputStream)
@@ -55,7 +53,7 @@ data class Comment (
     }
 
     @OptIn(ExperimentalEncodingApi::class)
-    fun getImage(context: Context): Bitmap? {
+    fun getImage(): Bitmap? {
         if (this.image.isNullOrEmpty()){
             return null
         }

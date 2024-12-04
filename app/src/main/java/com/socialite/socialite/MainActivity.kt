@@ -4,22 +4,16 @@ import android.content.Context
 import android.content.Intent
 import android.graphics.ImageDecoder
 import android.os.Bundle
-import android.provider.MediaStore
 import android.util.Log
 import android.widget.Button
 import android.widget.ImageButton
 import android.widget.ImageView
-import androidx.activity.ComponentActivity
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
-import com.google.firebase.FirebaseApp
 import androidx.activity.result.PickVisualMediaRequest
 import androidx.activity.result.contract.ActivityResultContracts
-import androidx.core.graphics.decodeBitmap
-import com.socialite.socialite.repository.CommentDatabase
 import com.socialite.socialite.repository.Event
-import com.socialite.socialite.repository.EventDatabase
 import kotlinx.coroutines.runBlocking
 
 
@@ -31,8 +25,7 @@ class MainActivity : AppCompatActivity() {
         setContentView(R.layout.main)
 
         // Set default fragment
-        supportFragmentManager.beginTransaction()
-            .replace(R.id.fragment_container, HomeFragment())
+        supportFragmentManager.beginTransaction().replace(R.id.fragment_container, HomeFragment())
             .commit()
 
         // Set click listeners for navigation buttons
@@ -46,15 +39,6 @@ class MainActivity : AppCompatActivity() {
             replaceFragment(CalendarFragment())
         }
 
-
-        val list = assets.list("")
-        Log.d("TAGListAst", "listAssetFiles:s: ${list?.size}")
-        if (list!!.isNotEmpty()) {
-            for (file: String in list) {
-                Log.d("TEST", file)
-            }
-        }
-
         val btn: Button = findViewById(R.id.button)
         val pickMedia =
             registerForActivityResult(ActivityResultContracts.PickVisualMedia()) { uri ->
@@ -65,20 +49,19 @@ class MainActivity : AppCompatActivity() {
                     val context: Context = this;
                     val bitmap = ImageDecoder.decodeBitmap(
                         ImageDecoder.createSource(
-                            this.contentResolver,
-                            uri
+                            this.contentResolver, uri
                         )
                     )
 
-                    runBlocking {
-                        testEvent.setImage(
-                            context,
-                            bitmap
-                        )
-                    }
+//                    runBlocking {
+//                        testEvent.setImage(
+//                            bitmap
+//                        )
+//                    }
+
                     val imageView: ImageView = findViewById(R.id.imageView)
 
-                    imageView.setImageBitmap(runBlocking { testEvent.getImage(context) })
+//                    imageView.setImageBitmap(runBlocking { testEvent.getImage() })
                 } else {
                     Log.d("PhotoPicker", "No media selected")
                 }
@@ -110,29 +93,25 @@ class MainActivity : AppCompatActivity() {
 
             val bitmap = ImageDecoder.decodeBitmap(
                 ImageDecoder.createSource(
-                    this.contentResolver,
-                    selectedFile
+                    this.contentResolver, selectedFile
                 )
             )
 
-            runBlocking {
-                testEvent.setImage(
-                    context,
-                    bitmap
-                )
-            }
+//            runBlocking {
+//                testEvent.setImage(
+//                    bitmap
+//                )
+//            }
             val imageView: ImageView = findViewById(R.id.imageView)
 
-            imageView.setImageBitmap(runBlocking { testEvent.getImage(context) })
+//            imageView.setImageBitmap(runBlocking { testEvent.getImage() })
         }
     }
 
 
     private fun replaceFragment(fragment: Fragment) {
-        supportFragmentManager.beginTransaction()
-            .replace(R.id.fragment_container, fragment)
-            .addToBackStack(null)
-            .commit()
+        supportFragmentManager.beginTransaction().replace(R.id.fragment_container, fragment)
+            .addToBackStack(null).commit()
     }
 }
 

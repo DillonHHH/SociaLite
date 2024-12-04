@@ -22,8 +22,14 @@ data class Event(
 ) {
     constructor() : this(null, "", "", " ", "", 0, "")
 
+
+    // required for deserialization from database
+    fun setImage(image: String) {
+        this.image = image
+    }
+
     @OptIn(ExperimentalEncodingApi::class)
-    fun setImage(image: Bitmap) {
+    fun setImageWithBitmap(image: Bitmap) {
 
         val outputStream = ByteArrayOutputStream()
         image.compress(Bitmap.CompressFormat.JPEG, 50, outputStream)

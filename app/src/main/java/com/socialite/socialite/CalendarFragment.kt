@@ -11,7 +11,10 @@ import androidx.recyclerview.widget.RecyclerView
 import com.applandeo.materialcalendarview.CalendarDay
 import com.applandeo.materialcalendarview.CalendarView
 import com.applandeo.materialcalendarview.listeners.OnCalendarDayClickListener
+import com.socialite.socialite.repository.CommentDatabase
 import com.socialite.socialite.repository.Event
+import com.socialite.socialite.repository.EventDatabase
+import kotlinx.coroutines.runBlocking
 import java.text.SimpleDateFormat
 import java.util.Calendar
 import java.util.Date
@@ -23,6 +26,8 @@ class CalendarFragment : Fragment() {
     private lateinit var selectedDateText: TextView
     private lateinit var eventTitleRecyclerView: RecyclerView
     private lateinit var eventTitleAdapter: EventTitleAdapter
+    private val eventDatabase: EventDatabase = EventDatabase()
+    private val commentDatabase: CommentDatabase = CommentDatabase()
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -81,17 +86,9 @@ class CalendarFragment : Fragment() {
         selectedDateText.text = "Events on " + eventDate
 
         // Get events for selected date and update adapter
-        val eventsForDate = getEventsForDate(eventDate)
+        val eventsForDate = runBlocking {eventDatabase.getEventsForDate(eventDate)}
         eventTitleAdapter.submitList(eventsForDate)
     }
 
-    private fun getEventsForDate(date: String): List<Event> {
-        // Replace this with actual event data source
-        return listOf(
-            Event(0, "Concert", "Free concert in the park.", "Fayetteville Library, Arkansas", date, ""),
-            Event(1, "Workshop", "Art workshop for all ages.", "Community Center", date, ""),
-            Event(2, "Charity Run", "5k charity run event.", "Downtown, Dickson Street", date, ""),
-            Event(3, "Food Festival", "Taste foods from around the world!", "Market Square", date, "")
-        )
-    }
+
 }
