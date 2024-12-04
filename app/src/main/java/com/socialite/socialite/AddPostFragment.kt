@@ -11,15 +11,19 @@ import android.view.ViewGroup
 import android.widget.EditText
 import android.widget.ImageView
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.compose.material3.FloatingActionButtonDefaults
 import androidx.fragment.app.Fragment
 import com.google.android.material.floatingactionbutton.FloatingActionButton
+import com.socialite.socialite.repository.CommentDatabase
 import com.socialite.socialite.repository.Event
+import com.socialite.socialite.repository.EventDatabase
+import kotlinx.coroutines.runBlocking
 
 class AddPostFragment : Fragment() {
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
-        savedInstanceState: Bundle?
+        savedInstanceState: Bundle?,
     ): View? {
         val view = inflater.inflate(R.layout.fragment_add_post, container, false)
 
@@ -28,6 +32,9 @@ class AddPostFragment : Fragment() {
         val eventImage = view?.findViewById<ImageView>(R.id.imageView)
         val eventDateEditText = view?.findViewById<EditText>(R.id.eventDate)
         val eventDescriptionEditText = view?.findViewById<EditText>(R.id.eventDescription)
+        val eventDatabase: EventDatabase = EventDatabase()
+        val commentDatabase: CommentDatabase = CommentDatabase()
+
 
 //        val pickMedia = registerForActivityResult(ActivityResultContracts.PickVisualMedia()) { uri ->
 //            // Callback is invoked after the user selects a media item or closes the photo picker.
@@ -50,10 +57,13 @@ class AddPostFragment : Fragment() {
             val start = eventDateEditText?.text.toString()
             val description = eventDescriptionEditText?.text.toString()
             val image = eventImage?.drawable.toString()
-            
+
+            val allEvents = runBlocking { eventDatabase.getAllEvents() }
+
             //add event to database
-            //val event = Event(title, description, location, start, 0, image)
-            
+            val event = Event(allEvents, title, description, location, start, 0, image)
+            runBlocking { eventDatabase.insertEvent(event) }
+
             //clear fields
             eventTitleEditText?.text?.clear()
             eventLocationEditText?.text?.clear()

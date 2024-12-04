@@ -55,6 +55,7 @@ class EventDetailsActivity : AppCompatActivity() {
         val commentImageBeforePost = findViewById<ImageView>(R.id.commentImageBeforePost)
         val addImageImageButton = findViewById<Button>(R.id.addImageImageButton)
         val submitCommentButton = findViewById<Button>(R.id.submitCommentButton)
+        val likeCounter = findViewById<TextView>(R.id.likeCount)
 
         val commentsRecyclerView = findViewById<RecyclerView>(R.id.eventCommentsRecyclerView)
         commentsRecyclerView.layoutManager = LinearLayoutManager(this)
@@ -116,10 +117,13 @@ class EventDetailsActivity : AppCompatActivity() {
             //change image source to filled in heart
             isLiked = !isLiked
             if (isLiked) {
+                likeCounter.text = (likeCounter.text.toString().toInt() + 1).toString()
                 likeButton.setImageResource(R.drawable.ic_filled_heart)
             } else {
+                likeCounter.text = (likeCounter.text.toString().toInt() - 1).toString()
                 likeButton.setImageResource(R.drawable.ic_empty_heart)
             }
+
         }
 
         commentEventButton.setOnClickListener {
@@ -150,8 +154,8 @@ class EventDetailsActivity : AppCompatActivity() {
                         commentDatabase.getAllCommentsForEvent(event.id!!)
                     }
 
-                    // Update the RecyclerView adapter
-                    adapter.notifyItemInserted(comments.size - 1)
+                    val newAdapter = CommentAdapter(comments)
+                    commentsRecyclerView.adapter = newAdapter
                 }
 
                 // Hide the comment input layout
