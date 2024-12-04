@@ -1,6 +1,8 @@
 package com.socialite.socialite
 
+import android.content.Context
 import android.graphics.Bitmap
+import android.graphics.ImageDecoder
 import android.os.Bundle
 import android.util.Log
 import android.view.View
@@ -11,11 +13,14 @@ import android.widget.ImageButton
 import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.TextView
+import androidx.activity.result.PickVisualMediaRequest
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.socialite.socialite.repository.Comment
 import com.socialite.socialite.repository.CommentDatabase
+import com.socialite.socialite.repository.Event
 import com.socialite.socialite.repository.EventDatabase
 import kotlinx.coroutines.runBlocking
 
@@ -45,6 +50,8 @@ class EventDetailsActivity : AppCompatActivity() {
         val commentInputLayout = findViewById<LinearLayout>(R.id.commentInputLayout)
         val commenterNameInput = findViewById<EditText>(R.id.commenterNameInput)
         val commentTextInput = findViewById<EditText>(R.id.commentTextInput)
+        val commentImageBeforePost = findViewById<ImageView>(R.id.commentImageBeforePost)
+        val addImageImageButton = findViewById<Button>(R.id.addImageImageButton)
         val submitCommentButton = findViewById<Button>(R.id.submitCommentButton)
 
         val commentsRecyclerView = findViewById<RecyclerView>(R.id.eventCommentsRecyclerView)
@@ -88,6 +95,40 @@ class EventDetailsActivity : AppCompatActivity() {
         commentEventButton.setOnClickListener {
             // Show the comment input layout
             commentInputLayout.visibility = View.VISIBLE
+
+//            commentImage.setOnClickListener {
+//                Log.d("CommentImage", "Clicked")
+//            }
+
+            val pickMedia = registerForActivityResult(ActivityResultContracts.PickVisualMedia()) { uri ->
+                    // Callback is invoked after the user selects a media item or closes the
+                    // photo picker.
+                    if (uri != null) {
+                        val testEvent: Event = Event()
+                        val context: Context = this;
+                        val bitmap = ImageDecoder.decodeBitmap(ImageDecoder.createSource(this.contentResolver, uri))
+                        val imageView: ImageView = commentImageBeforePost
+//                    runBlocking { testEvent.setImage( bitmap ) }
+//                    imageView.setImageBitmap(runBlocking { testEvent.getImage() })
+                    } else {
+                        Log.d("PhotoPicker", "No media selected")
+                    }
+                }
+            addImageImageButton.setOnClickListener {
+                pickMedia.launch(PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageOnly))
+//            Registers a photo picker activity launcher in single-select mode.
+//            Include only one of the following calls to launch(), depending on the types
+//            of media that you want to let the user choose from.
+//
+//            Launch the photo picker and let the user choose only images.
+
+//
+//            val intent = Intent()
+//                .setType("*/*")
+//                .setAction(Intent.ACTION_GET_CONTENT)
+//
+//            startActivityForResult(Intent.createChooser(intent, "Select a file"), 111)
+            }
 
             // Handle comment submission
             submitCommentButton.setOnClickListener {

@@ -34,13 +34,6 @@
         android:background="#FFFFFF"
         android:padding="10dp">
 
-        <Button
-            android:id="@+id/button"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:text="Button"/>
-
         <ImageButton
             android:id="@+id/nav_home"
             android:layout_width="0dp"
@@ -58,6 +51,15 @@
             android:src="@drawable/ic_search"
             android:background="?android:attr/selectableItemBackground"
             android:contentDescription="Search" />
+
+        <ImageButton
+            android:id="@+id/nav_add_post"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:src="@drawable/ic_add"
+            android:background="?android:attr/selectableItemBackground"
+            android:contentDescription="Add Post"/>
 
         <ImageButton
             android:id="@+id/nav_calendar"

@@ -153,6 +153,18 @@
                 android:layout_weight="2"
                 android:hint="Comment" />
 
+            <ImageView
+                android:id="@+id/commentImageBeforePost"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/ic_image" />
+
+            <Button
+                android:id="@+id/addImageImageButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Add Image" />
+
             <Button
                 android:id="@+id/submitCommentButton"
                 android:layout_width="wrap_content"
