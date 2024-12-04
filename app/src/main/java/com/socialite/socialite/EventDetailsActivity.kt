@@ -4,6 +4,7 @@ import android.content.Context
 import android.graphics.Bitmap
 import android.graphics.ImageDecoder
 import android.os.Bundle
+import android.util.Log
 import android.view.View
 import android.view.View.GONE
 import android.widget.Button
@@ -80,6 +81,21 @@ class EventDetailsActivity : AppCompatActivity() {
             eventImageView.visibility = GONE
         }
 
+        val pickMedia = registerForActivityResult(ActivityResultContracts.PickVisualMedia()) { uri ->
+            // Callback is invoked after the user selects a media item or closes the
+            // photo picker.
+            if (uri != null) {
+                val testEvent: Event = Event()
+                val context: Context = this;
+                val bitmap = ImageDecoder.decodeBitmap(ImageDecoder.createSource(this.contentResolver, uri))
+                val imageView: ImageView = commentImageBeforePost
+                //runBlocking { testEvent.setImage( bitmap ) }
+                imageView.setImageBitmap(Bitmap.createScaledBitmap(bitmap, 100, 100, false))
+            } else {
+                Log.d("PhotoPicker", "No media selected")
+            }
+        }
+
         // Set click listeners for navigation buttons
         findViewById<ImageButton>(R.id.nav_back).setOnClickListener {
             finish()
@@ -99,38 +115,8 @@ class EventDetailsActivity : AppCompatActivity() {
             // Show the comment input layout
             commentInputLayout.visibility = View.VISIBLE
 
-//            commentImage.setOnClickListener {
-//                Log.d("CommentImage", "Clicked")
-//            }
-
-            val pickMedia = registerForActivityResult(ActivityResultContracts.PickVisualMedia()) { uri ->
-                    // Callback is invoked after the user selects a media item or closes the
-                    // photo picker.
-                    if (uri != null) {
-                        val testEvent: Event = Event()
-                        val context: Context = this;
-                        val bitmap = ImageDecoder.decodeBitmap(ImageDecoder.createSource(this.contentResolver, uri))
-                        val imageView: ImageView = commentImageBeforePost
-//                    runBlocking { testEvent.setImage( bitmap ) }
-//                    imageView.setImageBitmap(runBlocking { testEvent.getImage() })
-                    } else {
-                        //Log.d("PhotoPicker", "No media selected")
-                    }
-                }
             addImageImageButton.setOnClickListener {
                 pickMedia.launch(PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageOnly))
-//            Registers a photo picker activity launcher in single-select mode.
-//            Include only one of the following calls to launch(), depending on the types
-//            of media that you want to let the user choose from.
-//
-//            Launch the photo picker and let the user choose only images.
-
-//
-//            val intent = Intent()
-//                .setType("*/*")
-//                .setAction(Intent.ACTION_GET_CONTENT)
-//
-//            startActivityForResult(Intent.createChooser(intent, "Select a file"), 111)
             }
 
             // Handle comment submission
