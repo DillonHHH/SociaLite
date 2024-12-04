@@ -11,12 +11,12 @@ class CommentDatabase {
     private var collectionReference: CollectionReference = db.collection("comments")
 
 
-    init{
-        collectionReference.addSnapshotListener{ snapshot, e ->
+    init {
+        collectionReference.addSnapshotListener { snapshot, e ->
             if (e != null) {
                 Log.w("FirestoreDatasource", "Listen failed.", e)
                 return@addSnapshotListener
-            }else{
+            } else {
                 if (snapshot != null && !snapshot.isEmpty) {
                     Log.d(
                         "FirestoreDatasource",
@@ -43,10 +43,11 @@ class CommentDatabase {
 
     suspend fun getAllCommentsForEvent(eventId: Int): List<Comment> {
         return try {
-            val snapshot = collectionReference.whereEqualTo("eventId", eventId). get().await()
-            snapshot.documents.mapNotNull { document ->
+            val snapshot = collectionReference.whereEqualTo("eventId", eventId).get().await()
+            val comments = snapshot.documents.mapNotNull { document ->
                 document.toObject(Comment::class.java)
             }
+            return comments
         } catch (e: Exception) {
             Log.e("FirestoreDatasource", "Error fetching comments: $e")
             emptyList()
@@ -69,11 +70,10 @@ class CommentDatabase {
         }
     }
 
-    suspend fun insertComment(comment: Comment){
+    suspend fun insertComment(comment: Comment) {
         try {
             collectionReference.add(comment).await()
-        }
-        catch (exception: Exception){
+        } catch (exception: Exception) {
             Log.w("FireStore", "Error getting documents: ", exception)
 
         }

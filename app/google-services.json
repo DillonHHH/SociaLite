@@ -1,13 +1,13 @@
 {
   "project_info": {
-    "project_number": "201106361426",
-    "project_id": "socallite",
-    "storage_bucket": "socallite.firebasestorage.app"
+    "project_number": "17497618184",
+    "project_id": "socialite-7c365",
+    "storage_bucket": "socialite-7c365.firebasestorage.app"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:201106361426:android:0c1f6c34685a5a05b8a38b",
+        "mobilesdk_app_id": "1:17497618184:android:02680110e063b434061ebd",
         "android_client_info": {
           "package_name": "com.socialite.socialite"
         }
@@ -15,26 +15,7 @@
       "oauth_client": [],
       "api_key": [
         {
-          "current_key": "AIzaSyBqPOeCLDWFJglLiwZ02_vb7TZHCoZ6_yk"
-        }
-      ],
-      "services": {
-        "appinvite_service": {
-          "other_platform_oauth_client": []
-        }
-      }
-    },
-    {
-      "client_info": {
-        "mobilesdk_app_id": "1:201106361426:android:bc0340ba761f0d74b8a38b",
-        "android_client_info": {
-          "package_name": "com.sociallite.sociallite"
-        }
-      },
-      "oauth_client": [],
-      "api_key": [
-        {
-          "current_key": "AIzaSyBqPOeCLDWFJglLiwZ02_vb7TZHCoZ6_yk"
+          "current_key": "AIzaSyAev3dATnzoE636W7Gu2w_GfqExq26EQk0"
         }
       ],
       "services": {
