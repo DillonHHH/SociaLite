@@ -114,7 +114,7 @@ class EventDetailsActivity : AppCompatActivity() {
 //                    runBlocking { testEvent.setImage( bitmap ) }
 //                    imageView.setImageBitmap(runBlocking { testEvent.getImage() })
                     } else {
-                        Log.d("PhotoPicker", "No media selected")
+                        //Log.d("PhotoPicker", "No media selected")
                     }
                 }
             addImageImageButton.setOnClickListener {
