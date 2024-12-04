@@ -11,6 +11,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.applandeo.materialcalendarview.CalendarDay
 import com.applandeo.materialcalendarview.CalendarView
 import com.applandeo.materialcalendarview.listeners.OnCalendarDayClickListener
+import com.google.firebase.Timestamp
 import com.socialite.socialite.repository.CommentDatabase
 import com.socialite.socialite.repository.Event
 import com.socialite.socialite.repository.EventDatabase
@@ -86,7 +87,7 @@ class CalendarFragment : Fragment() {
         selectedDateText.text = "Events on " + eventDate
 
         // Get events for selected date and update adapter
-        val eventsForDate = runBlocking {eventDatabase.getEventsForDate(eventDate)}
+        val eventsForDate = runBlocking {eventDatabase.getEventsForDate(Timestamp(calendar.time))}
         eventTitleAdapter.submitList(eventsForDate)
     }
 

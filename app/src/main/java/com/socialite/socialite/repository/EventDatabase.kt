@@ -1,10 +1,12 @@
 package com.socialite.socialite.repository
 
 import android.util.Log
+import com.google.firebase.Timestamp
 import com.google.firebase.firestore.CollectionReference
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
 import kotlinx.coroutines.tasks.await
+import java.util.Calendar
 
 class EventDatabase {
     private val db = Firebase.firestore
@@ -22,8 +24,6 @@ class EventDatabase {
                         "Current number of documents: ${snapshot.documents.size}"
                     )
                 }
-
-
             }
         }
     }
@@ -54,9 +54,14 @@ class EventDatabase {
         }
     }
 
-    suspend fun getEventsForDate(date: String): List<Event>? {
+    suspend fun getEventsForDate(date: Timestamp): List<Event>? {
         return try {
-            val querySnapshot = collectionReference.whereEqualTo("start", date).get().await()
+            val querySnapshot = collectionReference.whereGreaterThan(
+                "start",
+                date
+            ).whereLessThan("start", addDayToTimestamp(date)).get().await()
+            //  whereEqualTo("start", date).get().await()
+            Log.d("query snapshot", querySnapshot.documents.size.toString())
             querySnapshot.documents.mapNotNull { document ->
                 document.toObject(Event::class.java)
             }
@@ -93,6 +98,14 @@ class EventDatabase {
     suspend fun likeEvent(event: Event) {
         event.likes++
         updateEvent(event)
+    }
+
+
+    fun addDayToTimestamp(timestamp: Timestamp): Timestamp {
+        val calendar = Calendar.getInstance()
+        calendar.time = timestamp.toDate()
+        calendar.add(Calendar.DATE, 1)
+        return Timestamp(calendar.time)
     }
 
 

@@ -24,6 +24,8 @@ import com.socialite.socialite.repository.Event
 import com.socialite.socialite.repository.EventDatabase
 import com.socialite.socialite.utils.decodeBitmapFromString
 import kotlinx.coroutines.runBlocking
+import java.time.ZoneId
+import java.time.format.DateTimeFormatter
 
 class EventDetailsActivity : AppCompatActivity() {
 
@@ -75,7 +77,11 @@ class EventDetailsActivity : AppCompatActivity() {
         eventTitleView.text = event.title
         eventLocationView.text = event.location
         eventDescriptionView.text = event.description
-        eventDateView.text = event.start
+        val instant = event.start.toDate().toInstant()
+        val formatter =
+            DateTimeFormatter.ofPattern("yyyy-MM-dd")
+                .withZone(ZoneId.systemDefault())
+        eventDateView.text = formatter.format(instant)
 
         val image: Bitmap? = decodeBitmapFromString(event.image)
         if (image != null) {

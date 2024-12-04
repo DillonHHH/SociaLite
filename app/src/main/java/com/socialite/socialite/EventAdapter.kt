@@ -10,6 +10,8 @@ import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.socialite.socialite.repository.Event
 import com.socialite.socialite.utils.decodeBitmapFromString
+import java.time.ZoneId
+import java.time.format.DateTimeFormatter
 
 class EventAdapter(
     private val events: List<Event>,
@@ -39,7 +41,11 @@ class EventAdapter(
 
         holder.title.text = event.title
         holder.location.text = event.location
-        holder.date.text = event.start
+        val instant = event.start.toDate().toInstant()
+        val formatter =
+            DateTimeFormatter.ofPattern("yyyy-MM-dd")
+                .withZone(ZoneId.systemDefault())
+        holder.date.text = formatter.format(instant)
         holder.description.text = event.description
 
         val image: Bitmap? = decodeBitmapFromString(event.image)
