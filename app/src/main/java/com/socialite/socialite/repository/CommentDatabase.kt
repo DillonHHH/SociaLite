@@ -74,8 +74,7 @@ class CommentDatabase {
         try {
             collectionReference.add(comment).await()
         } catch (exception: Exception) {
-            Log.w("FireStore", "Error getting documents: ", exception)
-
+            Log.w("FireStore", "Error adding documents: ", exception)
         }
 
     }
