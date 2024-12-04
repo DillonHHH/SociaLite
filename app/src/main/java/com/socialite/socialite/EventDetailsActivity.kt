@@ -4,7 +4,6 @@ import android.content.Context
 import android.graphics.Bitmap
 import android.graphics.ImageDecoder
 import android.os.Bundle
-import android.util.Log
 import android.view.View
 import android.view.View.GONE
 import android.widget.Button
@@ -62,7 +61,11 @@ class EventDetailsActivity : AppCompatActivity() {
         }
 
         val adapter = CommentAdapter(comments)
+
         commentsRecyclerView.adapter = adapter
+
+        commentsRecyclerView.layoutManager = LinearLayoutManager(this)
+        commentsRecyclerView.itemAnimator = null
 
         // Populate Views
         eventTitleView.text = event.title
@@ -132,13 +135,15 @@ class EventDetailsActivity : AppCompatActivity() {
 
             // Handle comment submission
             submitCommentButton.setOnClickListener {
+
                 val commenterName = commenterNameInput.text.toString()
                 val commentText = commentTextInput.text.toString()
 
                 // Add the comment to data source
                 if (commenterName.isNotEmpty() && commentText.isNotEmpty()) {
-                    val newComment = Comment(null, 1, commenterName, commentText, null)
-                    //TODO Replace this with actual data source
+                    val allComments: List<Comment> = runBlocking { commentDatabase.getAllComments() }
+                    val newComment = Comment(allComments, event.id, commenterName, commentText, "")
+
                     runBlocking {
                         commentDatabase.insertComment(newComment)
                     }
