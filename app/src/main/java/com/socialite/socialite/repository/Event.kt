@@ -21,7 +21,6 @@ import java.io.FileOutputStream
 import kotlin.io.encoding.Base64
 import kotlin.io.encoding.ExperimentalEncodingApi
 
-
 @Entity(tableName = "events")
 data class Event(
     @PrimaryKey(autoGenerate = true) var id: Int?,
@@ -57,7 +56,6 @@ data class Event(
         val encodedImage: String = Base64.encode(streamBytes)
 
         this.image = encodedImage
-
     }
 
     @OptIn(ExperimentalEncodingApi::class)

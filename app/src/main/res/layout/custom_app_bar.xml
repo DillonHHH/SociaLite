@@ -4,6 +4,15 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:background="#FAFAFA"
-    android:elevation="4dp"
-    android:logo="@color/white"
-    android:padding="16dp"/>
+    android:logo="@drawable/ic_logo"
+    android:padding="16dp"
+    android:elevation="4dp">
+
+    <ImageView
+        android:id="@+id/tv_header_title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:contentDescription="SociaLite Logo"
+        android:src="@drawable/ic_logo" />
+</androidx.appcompat.widget.Toolbar>

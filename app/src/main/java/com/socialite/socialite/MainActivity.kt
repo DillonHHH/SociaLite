@@ -7,9 +7,13 @@ import android.os.Bundle
 import android.provider.MediaStore
 import android.util.Log
 import android.widget.Button
+import android.widget.ImageButton
 import android.widget.ImageView
 import androidx.activity.ComponentActivity
 import androidx.activity.enableEdgeToEdge
+import androidx.appcompat.app.AppCompatActivity
+import androidx.fragment.app.Fragment
+import com.google.firebase.FirebaseApp
 import androidx.activity.result.PickVisualMediaRequest
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.graphics.decodeBitmap
@@ -19,24 +23,28 @@ import com.socialite.socialite.repository.EventDatabase
 import kotlinx.coroutines.runBlocking
 
 
-class MainActivity : ComponentActivity() {
+class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
-
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
 
-        setContentView(R.layout.temp_layout)
+        setContentView(R.layout.main)
 
-//        val button: Button = findViewById(R.id.test_api)
+        // Set default fragment
+        supportFragmentManager.beginTransaction()
+            .replace(R.id.fragment_container, HomeFragment())
+            .commit()
 
-        val events = EventDatabase()
-        val comments = CommentDatabase()
-//
-//        button.setOnClickListener {
-//            runBlocking {
-//                Log.d("test", runBlocking {comments.fetchCommentsForEvent(5)}.toString())
-//            }
-//        }
+        // Set click listeners for navigation buttons
+        findViewById<ImageButton>(R.id.nav_home).setOnClickListener {
+            replaceFragment(HomeFragment())
+        }
+        findViewById<ImageButton>(R.id.nav_search).setOnClickListener {
+            replaceFragment(SearchFragment())
+        }
+        findViewById<ImageButton>(R.id.nav_calendar).setOnClickListener {
+            replaceFragment(CalendarFragment())
+        }
 
 
         val list = assets.list("")
@@ -54,11 +62,7 @@ class MainActivity : ComponentActivity() {
                 // photo picker.
                 if (uri != null) {
                     val testEvent: Event = Event()
-
-
                     val context: Context = this;
-
-
                     val bitmap = ImageDecoder.decodeBitmap(
                         ImageDecoder.createSource(
                             this.contentResolver,
@@ -80,10 +84,7 @@ class MainActivity : ComponentActivity() {
                 }
             }
         btn.setOnClickListener {
-
-
             // Registers a photo picker activity launcher in single-select mode.
-
 
 // Include only one of the following calls to launch(), depending on the types
 // of media that you want to let the user choose from.
@@ -97,8 +98,6 @@ class MainActivity : ComponentActivity() {
 //
 //            startActivityForResult(Intent.createChooser(intent, "Select a file"), 111)
         }
-
-
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
@@ -106,12 +105,8 @@ class MainActivity : ComponentActivity() {
 
         if (requestCode == 111 && resultCode == RESULT_OK) {
             val testEvent: Event = Event()
-
-
             val context: Context = this;
-
             val selectedFile = data?.data!! // The URI with the location of the file
-
 
             val bitmap = ImageDecoder.decodeBitmap(
                 ImageDecoder.createSource(
@@ -133,5 +128,11 @@ class MainActivity : ComponentActivity() {
     }
 
 
+    private fun replaceFragment(fragment: Fragment) {
+        supportFragmentManager.beginTransaction()
+            .replace(R.id.fragment_container, fragment)
+            .addToBackStack(null)
+            .commit()
+    }
 }
 
