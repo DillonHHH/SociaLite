@@ -10,12 +10,12 @@ class EventDatabase {
     private val db = Firebase.firestore
     private var collectionReference: CollectionReference = db.collection("events")
 
-    init{
-        collectionReference.addSnapshotListener{ snapshot, e ->
+    init {
+        collectionReference.addSnapshotListener { snapshot, e ->
             if (e != null) {
                 Log.w("FirestoreDatasource", "Listen failed.", e)
                 return@addSnapshotListener
-            }else{
+            } else {
                 if (snapshot != null && !snapshot.isEmpty) {
                     Log.d(
                         "FirestoreDatasource",
@@ -28,7 +28,7 @@ class EventDatabase {
         }
     }
 
-    suspend fun fetchAllEvents(): List<Event> {
+    suspend fun getAllEvents(): List<Event> {
         return try {
             val snapshot = collectionReference.get().await()
             snapshot.documents.mapNotNull { document ->
@@ -40,18 +40,7 @@ class EventDatabase {
         }
     }
 
-    suspend fun insert(event: Event){
-        try {
-            collectionReference.add(event).await()
-        }
-        catch (exception: Exception){
-            Log.w("FireStore", "Error getting documents: ", exception)
-
-        }
-
-    }
-
-    suspend fun get(eventId: Int): Event? {
+    suspend fun getEvent(eventId: Int): Event? {
         return try {
             val querySnapshot = collectionReference
                 .whereEqualTo("id", eventId)
@@ -67,6 +56,39 @@ class EventDatabase {
         }
     }
 
+    suspend fun insertEvent(event: Event) {
+        try {
+            collectionReference.add(event).await()
+        } catch (exception: Exception) {
+            Log.w("FireStore", "Error getting documents: ", exception)
+
+        }
+    }
+
+
+    suspend fun updateEvent(modifiedEvent: Event) {
+        // Will update the document with the same id as modifiedEvent
+        try {
+            // Delete old event, create a new one with updated data
+            val querySnapshot = collectionReference
+                .whereEqualTo("id", modifiedEvent.id)
+                .get()
+                .await()
+            querySnapshot.documents.forEach {
+                it.reference.delete()
+            }
+
+            insertEvent(modifiedEvent)
+        } catch (exception: Exception) {
+            Log.w("FireStore", "Error getting documents: ", exception)
+
+        }
+    }
+
+    suspend fun likeEvent(event: Event) {
+        event.likes++
+        updateEvent(event)
+    }
 
 
 }

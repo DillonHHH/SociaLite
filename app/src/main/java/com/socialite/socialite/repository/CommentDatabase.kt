@@ -1,11 +1,9 @@
 package com.socialite.socialite.repository
 
-import android.graphics.Bitmap
 import android.util.Log
 import com.google.firebase.Firebase
 import com.google.firebase.firestore.CollectionReference
 import com.google.firebase.firestore.firestore
-import com.google.firebase.firestore.ktx.firestore
 import kotlinx.coroutines.tasks.await
 
 class CommentDatabase {
@@ -31,7 +29,7 @@ class CommentDatabase {
         }
     }
 
-    suspend fun fetchAllComments(): List<Comment> {
+    suspend fun getAllComments(): List<Comment> {
         return try {
             val snapshot = collectionReference.get().await()
             snapshot.documents.mapNotNull { document ->
@@ -43,7 +41,7 @@ class CommentDatabase {
         }
     }
 
-    suspend fun fetchCommentsForEvent(eventId: Int): List<Comment> {
+    suspend fun getAllCommentsForEvent(eventId: Int): List<Comment> {
         return try {
             val snapshot = collectionReference.whereEqualTo("eventId", eventId). get().await()
             snapshot.documents.mapNotNull { document ->
@@ -55,18 +53,7 @@ class CommentDatabase {
         }
     }
 
-    suspend fun insert(comment: Comment){
-        try {
-            collectionReference.add(comment).await()
-        }
-        catch (exception: Exception){
-            Log.w("FireStore", "Error getting documents: ", exception)
-
-        }
-
-    }
-
-    suspend fun get(commentId: Int): Comment? {
+    suspend fun getComment(commentId: Int): Comment? {
         return try {
             val querySnapshot = collectionReference
                 .whereEqualTo("id", commentId)
@@ -82,6 +69,38 @@ class CommentDatabase {
         }
     }
 
+    suspend fun insertComment(comment: Comment){
+        try {
+            collectionReference.add(comment).await()
+        }
+        catch (exception: Exception){
+            Log.w("FireStore", "Error getting documents: ", exception)
+
+        }
+
+    }
+
+
+    suspend fun updateComment(modifiedComment: Comment) {
+        // Will update the document with the same id as modifiedEvent
+        try {
+
+            // Delete old comment, create a new one with updated data
+            val querySnapshot = collectionReference
+                .whereEqualTo("id", modifiedComment.id)
+                .get()
+                .await()
+            querySnapshot.documents.forEach {
+                it.reference.delete()
+            }
+
+            insertComment(modifiedComment)
+
+        } catch (exception: Exception) {
+            Log.w("FireStore", "Error getting documents: ", exception)
+
+        }
+    }
 
 
 }
