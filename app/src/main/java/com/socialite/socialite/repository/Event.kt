@@ -22,6 +22,24 @@ data class Event(
 ) {
     constructor() : this(null, "", "", " ", "", 0, "")
 
+    constructor(
+        events: List<Event>,
+        title: String,
+        description: String,
+        location: String,
+        start: String,
+        likes: Int,
+        image: String
+    ) : this(0, title, description, location, start, likes, image) {
+        var greatestId = 0
+        for(event in events){
+            if (event.id!! > greatestId){
+                greatestId = event.id!!
+            }
+        }
+        this.id = ++greatestId
+    }
+
 
     // required for deserialization from database
     fun setImage(image: String) {

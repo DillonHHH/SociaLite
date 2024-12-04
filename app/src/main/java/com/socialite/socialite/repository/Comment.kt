@@ -11,14 +11,30 @@ import kotlin.io.encoding.Base64
 import kotlin.io.encoding.ExperimentalEncodingApi
 
 @Entity(tableName = "comments")
-data class Comment (
+data class Comment(
     @PrimaryKey(autoGenerate = true) var id: Int?,
     @ColumnInfo(name = "eventId") var eventId: Int?,
-    @ColumnInfo(name ="name") var name: String,
-    @ColumnInfo(name ="comment") var comment: String,
-    @ColumnInfo(name ="image") private var image: String?, // compressed and string encoded image
-){
-    constructor(): this(null, null, "","", null)
+    @ColumnInfo(name = "name") var name: String,
+    @ColumnInfo(name = "comment") var comment: String,
+    @ColumnInfo(name = "image") private var image: String?, // compressed and string encoded image
+) {
+    constructor(): this(null, null, "", "","")
+
+    constructor(
+        comments: List<Comment>,
+        eventId: Int?,
+        name: String,
+        comment: String,
+        image: String
+    ) : this(0, eventId, name, comment, image) {
+        var greatestId = 0
+        for (com in comments) {
+            if (com.id!! > greatestId) {
+                greatestId = com.id!!
+            }
+        }
+        this.id = ++greatestId
+    }
 
     // required for deserialization from database
     fun setImage(image: String) {
@@ -40,7 +56,7 @@ data class Comment (
             outputStream.reset()
             tempImage.compress(Bitmap.CompressFormat.JPEG, quality, outputStream)
             quality -= 5
-            if (quality <= 0){
+            if (quality <= 0) {
                 break
             }
         }
@@ -54,7 +70,7 @@ data class Comment (
 
     @OptIn(ExperimentalEncodingApi::class)
     fun getImage(): Bitmap? {
-        if (this.image.isNullOrEmpty()){
+        if (this.image.isNullOrEmpty()) {
             return null
         }
         val decodedString = Base64.decode(this.image!!)
