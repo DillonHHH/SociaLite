@@ -23,7 +23,7 @@ data class Comment (
     @ColumnInfo(name = "eventId") var eventId: Int?,
     @ColumnInfo(name ="name") var name: String,
     @ColumnInfo(name ="comment") var comment: String,
-    @ColumnInfo(name ="image") var image: String?, // compressed and string encoded image
+    @ColumnInfo(name ="image") private var image: String?, // compressed and string encoded image
 ){
     constructor(): this(null, null, "","", null)
 
