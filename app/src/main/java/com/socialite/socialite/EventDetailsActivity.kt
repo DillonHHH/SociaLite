@@ -22,6 +22,7 @@ import com.socialite.socialite.repository.Comment
 import com.socialite.socialite.repository.CommentDatabase
 import com.socialite.socialite.repository.Event
 import com.socialite.socialite.repository.EventDatabase
+import com.socialite.socialite.utils.decodeBitmapFromString
 import kotlinx.coroutines.runBlocking
 
 class EventDetailsActivity : AppCompatActivity() {
@@ -29,6 +30,7 @@ class EventDetailsActivity : AppCompatActivity() {
     private var isLiked = false
     private val eventDatabase: EventDatabase = EventDatabase()
     private val commentDatabase: CommentDatabase = CommentDatabase()
+    private var newCommentImage: Bitmap? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -74,27 +76,36 @@ class EventDetailsActivity : AppCompatActivity() {
         eventDescriptionView.text = event.description
         eventDateView.text = event.start
 
-        val image: Bitmap? = event.getImage()
+        val image: Bitmap? = decodeBitmapFromString(event.image)
         if (image != null) {
             eventImageView.setImageBitmap(image)
         } else {
             eventImageView.visibility = GONE
         }
 
-        val pickMedia = registerForActivityResult(ActivityResultContracts.PickVisualMedia()) { uri ->
-            // Callback is invoked after the user selects a media item or closes the
-            // photo picker.
-            if (uri != null) {
-                val testEvent: Event = Event()
-                val context: Context = this;
-                val bitmap = ImageDecoder.decodeBitmap(ImageDecoder.createSource(this.contentResolver, uri))
-                val imageView: ImageView = commentImageBeforePost
-                //runBlocking { testEvent.setImage( bitmap ) }
-                imageView.setImageBitmap(Bitmap.createScaledBitmap(bitmap, 100, 100, false))
-            } else {
-                Log.d("PhotoPicker", "No media selected")
+        val pickMedia =
+            registerForActivityResult(ActivityResultContracts.PickVisualMedia()) { uri ->
+                // Callback is invoked after the user selects a media item or closes the
+                // photo picker.
+                if (uri != null) {
+                    val testEvent: Event = Event()
+                    val context: Context = this;
+                    val bitmap = ImageDecoder.decodeBitmap(
+                        ImageDecoder.createSource(
+                            this.contentResolver,
+                            uri
+                        )
+                    )
+                    val imageView: ImageView = commentImageBeforePost
+                    imageView.setImageBitmap(Bitmap.createScaledBitmap(bitmap, 100, 100, false))
+                    newCommentImage = Bitmap.createScaledBitmap(
+                        bitmap,
+                        Math.round(bitmap.width * (720f / bitmap.height.toFloat())), 720, false
+                    )
+                } else {
+                    Log.d("PhotoPicker", "No media selected")
+                }
             }
-        }
 
         // Set click listeners for navigation buttons
         findViewById<ImageButton>(R.id.nav_back).setOnClickListener {
@@ -125,10 +136,11 @@ class EventDetailsActivity : AppCompatActivity() {
                 val commenterName = commenterNameInput.text.toString()
                 val commentText = commentTextInput.text.toString()
 
-                // Add the comment to data source
                 if (commenterName.isNotEmpty() && commentText.isNotEmpty()) {
-                    val allComments: List<Comment> = runBlocking { commentDatabase.getAllComments() }
-                    val newComment = Comment(allComments, event.id, commenterName, commentText, "")
+                    val allComments: List<Comment> =
+                        runBlocking { commentDatabase.getAllComments() }
+                    val newComment =
+                        Comment(allComments, event.id, commenterName, commentText, newCommentImage)
 
                     runBlocking {
                         commentDatabase.insertComment(newComment)

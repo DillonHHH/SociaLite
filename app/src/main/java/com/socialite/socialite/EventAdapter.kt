@@ -1,7 +1,6 @@
 package com.socialite.socialite
 
 import android.graphics.Bitmap
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.View.GONE
@@ -10,6 +9,7 @@ import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.socialite.socialite.repository.Event
+import com.socialite.socialite.utils.decodeBitmapFromString
 
 class EventAdapter(
     private val events: List<Event>,
@@ -33,7 +33,7 @@ class EventAdapter(
         val event = events[position]
         //val displayDate = event.date?.startDate?.let { parseDate(it) }
 
-        holder.itemView.setOnClickListener{
+        holder.itemView.setOnClickListener {
             onItemClick(event.id!!)
         }
 
@@ -42,14 +42,12 @@ class EventAdapter(
         holder.date.text = event.start
         holder.description.text = event.description
 
-        val image: Bitmap? = event.getImage()
+        val image: Bitmap? = decodeBitmapFromString(event.image)
         if (image != null) {
             holder.image.setImageBitmap(image)
-        }else{
+        } else {
             holder.image.visibility = GONE
         }
-
-        holder.image.setImageBitmap(event.getImage())
     }
 
     override fun getItemCount(): Int {

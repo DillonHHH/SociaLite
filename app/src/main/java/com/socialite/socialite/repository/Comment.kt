@@ -7,8 +7,8 @@ import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.PrimaryKey
 import java.io.ByteArrayOutputStream
-import kotlin.io.encoding.Base64
-import kotlin.io.encoding.ExperimentalEncodingApi
+import android.util.Base64 // Replace kotlin.io.encoding.Base64
+import com.socialite.socialite.utils.encodeBitmapToString
 
 @Entity(tableName = "comments")
 data class Comment(
@@ -16,17 +16,17 @@ data class Comment(
     @ColumnInfo(name = "eventId") var eventId: Int?,
     @ColumnInfo(name = "name") var name: String,
     @ColumnInfo(name = "comment") var comment: String,
-    @ColumnInfo(name = "image") private var image: String?, // compressed and string encoded image
+    @ColumnInfo(name = "image") var image: String, // compressed and string encoded image
 ) {
-    constructor(): this(null, null, "", "","")
+    constructor() : this(null, null, "", "", "")
 
     constructor(
         comments: List<Comment>,
         eventId: Int?,
         name: String,
         comment: String,
-        image: String
-    ) : this(0, eventId, name, comment, image) {
+        image: Bitmap?
+    ) : this(0, eventId, name, comment, "") {
         var greatestId = 0
         for (com in comments) {
             if (com.id!! > greatestId) {
@@ -34,46 +34,10 @@ data class Comment(
             }
         }
         this.id = ++greatestId
-    }
-
-    // required for deserialization from database
-    fun setImage(image: String) {
-        this.image = image
-    }
-
-    @OptIn(ExperimentalEncodingApi::class)
-    fun setImageWithBitmap(image: Bitmap) {
-
-        val outputStream = ByteArrayOutputStream()
-        image.compress(Bitmap.CompressFormat.JPEG, 50, outputStream)
-
-        var quality = 50
-
-        while (outputStream.toByteArray().size > 500000) {
-            Log.d("TAG", outputStream.toByteArray().size.toString())
-            val streamBytes = outputStream.toByteArray()
-            val tempImage = BitmapFactory.decodeByteArray(streamBytes, 0, streamBytes.size)
-            outputStream.reset()
-            tempImage.compress(Bitmap.CompressFormat.JPEG, quality, outputStream)
-            quality -= 5
-            if (quality <= 0) {
-                break
-            }
+        if (image != null) {
+            this.image = encodeBitmapToString(image)
         }
-
-        val streamBytes = outputStream.toByteArray()
-        val encodedImage: String = Base64.encode(streamBytes)
-
-        this.image = encodedImage
-
     }
 
-    @OptIn(ExperimentalEncodingApi::class)
-    fun getImage(): Bitmap? {
-        if (this.image.isNullOrEmpty()) {
-            return null
-        }
-        val decodedString = Base64.decode(this.image!!)
-        return BitmapFactory.decodeByteArray(decodedString, 0, decodedString.size)
-    }
 }
+

@@ -7,10 +7,10 @@ import android.view.ViewGroup
 import android.widget.TextView
 import android.graphics.Typeface
 import android.view.View.GONE
-import android.view.View.INVISIBLE
 import android.widget.ImageView
 import androidx.recyclerview.widget.RecyclerView
 import com.socialite.socialite.repository.Comment
+import com.socialite.socialite.utils.decodeBitmapFromString
 
 class CommentAdapter(private val comments: List<Comment>) :
     RecyclerView.Adapter<CommentAdapter.CommentViewHolder>() {
@@ -32,7 +32,8 @@ class CommentAdapter(private val comments: List<Comment>) :
         holder.commenterNameTextView.text = comment.name
         holder.commentTextView.text = comment.comment
 
-        val image: Bitmap? = comment.getImage()
+        val image: Bitmap? = decodeBitmapFromString(comment.image)
+
         if (image != null) {
             holder.imageView.setImageBitmap(image)
         }else{
