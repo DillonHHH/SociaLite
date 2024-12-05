@@ -1,5 +1,6 @@
 package com.socialite.socialite
 
+import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -42,28 +43,34 @@ class CalendarFragment : Fragment() {
 
         // Setup RecyclerView
         eventTitleRecyclerView.layoutManager = LinearLayoutManager(context)
-        eventTitleAdapter = EventTitleAdapter()
+        eventTitleAdapter = EventTitleAdapter{
+                eventId ->
+            // Start Event Details activity
+            val intent = Intent(requireContext(), EventDetailsActivity::class.java)
+            intent.putExtra("EXTRA_ID", eventId)
+            startActivity(intent)
+        }
         eventTitleRecyclerView.adapter = eventTitleAdapter
 
         // Define event dates
         val calendarDays = mutableListOf<CalendarDay>()
 
-        // Add today's event
-        val today = Calendar.getInstance()
-        val todayEvent = CalendarDay(today).apply {
-            // Set background drawable for this specific day
-            //backgroundDrawable = context?.let { AppCompatResources.getDrawable(it, R.drawable.ic_party_icon) }
+//        // Add today's event
+//        val today = Calendar.getInstance()
+//        val todayEvent = CalendarDay(today).apply {
+//            // Set background drawable for this specific day
+//            //backgroundDrawable = context?.let { AppCompatResources.getDrawable(it, R.drawable.ic_party_icon) }
+//
+//        }
+//        calendarDays.add(todayEvent)
 
-        }
-        calendarDays.add(todayEvent)
-
-        // Add an event 5 days from today
-        val futureDay = Calendar.getInstance().apply { add(Calendar.DAY_OF_MONTH, 5) }
-        val futureEvent = CalendarDay(futureDay).apply {
-            //backgroundDrawable = context?.let { AppCompatResources.getDrawable(it, R.drawable.ic_party_icon) }
-
-        }
-        calendarDays.add(futureEvent)
+//        // Add an event 5 days from today
+//        val futureDay = Calendar.getInstance().apply { add(Calendar.DAY_OF_MONTH, 5) }
+//        val futureEvent = CalendarDay(futureDay).apply {
+//            //backgroundDrawable = context?.let { AppCompatResources.getDrawable(it, R.drawable.ic_party_icon) }
+//
+//        }
+//        calendarDays.add(futureEvent)
 
         // Set the calendar days
         calendarView.setCalendarDays(calendarDays)

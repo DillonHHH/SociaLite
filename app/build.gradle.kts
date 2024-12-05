@@ -62,6 +62,7 @@ dependencies {
     implementation(libs.material.calendar.view)
     implementation(libs.androidx.cardview)
     implementation(libs.material)
+    implementation(libs.androidx.navigation.fragment.ktx)
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)

@@ -11,11 +11,13 @@ import android.view.ViewGroup
 import android.widget.EditText
 import android.widget.ImageView
 import android.widget.Toast
+import androidx.navigation.fragment.findNavController
 import androidx.activity.result.PickVisualMediaRequest
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.material3.FloatingActionButtonDefaults
 import androidx.core.graphics.drawable.toBitmap
 import androidx.fragment.app.Fragment
+import androidx.navigation.activity
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.google.firebase.Timestamp
 import com.socialite.socialite.repository.CommentDatabase
@@ -102,7 +104,7 @@ class AddPostFragment : Fragment() {
             Toast.makeText(requireContext(), "Event created!", Toast.LENGTH_SHORT).show()
 
             //navigate to home fragment
-            //findNavController().navigate(R.id.action_addPostFragment_to_homeFragment)
+            activity?.supportFragmentManager?.popBackStack()
         }
 
 

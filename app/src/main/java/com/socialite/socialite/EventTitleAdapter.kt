@@ -10,7 +10,9 @@ import androidx.recyclerview.widget.RecyclerView
 import com.socialite.socialite.repository.Event
 
 // Adapter for the RecyclerView
-class EventTitleAdapter : ListAdapter<Event, EventTitleAdapter.EventViewHolder>(EventDiffCallback()) {
+class EventTitleAdapter (
+    private val onItemClick: (eventId: Int) -> Unit
+) : ListAdapter<Event, EventTitleAdapter.EventViewHolder>(EventDiffCallback()) {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): EventViewHolder {
         val view = LayoutInflater.from(parent.context)
@@ -19,7 +21,11 @@ class EventTitleAdapter : ListAdapter<Event, EventTitleAdapter.EventViewHolder>(
     }
 
     override fun onBindViewHolder(holder: EventViewHolder, position: Int) {
-        holder.bind(getItem(position))
+        val event = getItem(position)
+        holder.bind(event)
+        holder.itemView.setOnClickListener {
+            onItemClick(event.id!!)
+        }
     }
 
     class EventViewHolder(view: View) : RecyclerView.ViewHolder(view) {

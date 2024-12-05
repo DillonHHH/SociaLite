@@ -32,58 +32,12 @@ class MainActivity : AppCompatActivity() {
         findViewById<ImageButton>(R.id.nav_home).setOnClickListener {
             replaceFragment(HomeFragment())
         }
-        findViewById<ImageButton>(R.id.nav_search).setOnClickListener {
-            replaceFragment(SearchFragment())
-        }
         findViewById<ImageButton>(R.id.nav_add_post).setOnClickListener {
             replaceFragment(AddPostFragment())
         }
         findViewById<ImageButton>(R.id.nav_calendar).setOnClickListener {
             replaceFragment(CalendarFragment())
         }
-
-        //val btn: ImageButton = findViewById(R.id.nav_add_post)
-        val pickMedia =
-            registerForActivityResult(ActivityResultContracts.PickVisualMedia()) { uri ->
-                // Callback is invoked after the user selects a media item or closes the
-                // photo picker.
-                if (uri != null) {
-                    val testEvent: Event = Event()
-                    val context: Context = this;
-                    val bitmap = ImageDecoder.decodeBitmap(
-                        ImageDecoder.createSource(
-                            this.contentResolver, uri
-                        )
-                    )
-
-//                    runBlocking {
-//                        testEvent.setImage(
-//                            bitmap
-//                        )
-//                    }
-
-                    val imageView: ImageView = findViewById(R.id.imageView)
-
-//                    imageView.setImageBitmap(runBlocking { testEvent.getImage() })
-                } else {
-                    Log.d("PhotoPicker", "No media selected")
-                }
-            }
-//        btn.setOnClickListener {
-//             Registers a photo picker activity launcher in single-select mode.
-//
-// Include only one of the following calls to launch(), depending on the types
-// of media that you want to let the user choose from.
-//
-// Launch the photo picker and let the user choose only images.
-//            pickMedia.launch(PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageOnly))
-//
-//            val intent = Intent()
-//                .setType("*/*")
-//                .setAction(Intent.ACTION_GET_CONTENT)
-//
-//            startActivityForResult(Intent.createChooser(intent, "Select a file"), 111)
-//        }
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
@@ -99,15 +53,6 @@ class MainActivity : AppCompatActivity() {
                     this.contentResolver, selectedFile
                 )
             )
-
-//            runBlocking {
-//                testEvent.setImage(
-//                    bitmap
-//                )
-//            }
-            val imageView: ImageView = findViewById(R.id.imageView)
-
-//            imageView.setImageBitmap(runBlocking { testEvent.getImage() })
         }
     }
 

@@ -44,15 +44,6 @@
             android:contentDescription="Home" />
 
         <ImageButton
-            android:id="@+id/nav_search"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:src="@drawable/ic_search"
-            android:background="?android:attr/selectableItemBackground"
-            android:contentDescription="Search" />
-
-        <ImageButton
             android:id="@+id/nav_add_post"
             android:layout_width="0dp"
             android:layout_height="wrap_content"

@@ -5,14 +5,31 @@
     android:layout_height="match_parent"
     android:orientation="vertical">
 
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
     <TextView
         android:id="@+id/textView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="Post Event"
         android:textSize="30dp"
+        android:layout_weight="24"
         android:padding="@dimen/big_padding"/>
 
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/postEventButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:clickable="true"
+        app:backgroundTint="#FFFEFE"
+        app:srcCompat="@drawable/ic_add"
+        android:layout_margin="@dimen/medium_padding"/>
+
+    </LinearLayout>
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -68,14 +85,4 @@
 
     </LinearLayout>
 
-    <com.google.android.material.floatingactionbutton.FloatingActionButton
-        android:id="@+id/postEventButton"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_weight="1"
-        android:clickable="true"
-        app:backgroundTint="#FFFEFE"
-        app:srcCompat="@drawable/ic_add"
-        android:layout_gravity="end"
-        android:layout_margin="@dimen/medium_padding"/>
 </LinearLayout>
