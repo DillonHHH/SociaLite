@@ -1,5 +1,6 @@
 package com.socialite.socialite
 
+import android.app.DatePickerDialog
 import android.content.Context
 import android.graphics.Bitmap
 import android.graphics.ImageDecoder
@@ -8,16 +9,14 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Button
 import android.widget.EditText
 import android.widget.ImageView
 import android.widget.Toast
-import androidx.navigation.fragment.findNavController
 import androidx.activity.result.PickVisualMediaRequest
 import androidx.activity.result.contract.ActivityResultContracts
-import androidx.compose.material3.FloatingActionButtonDefaults
 import androidx.core.graphics.drawable.toBitmap
 import androidx.fragment.app.Fragment
-import androidx.navigation.activity
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.google.firebase.Timestamp
 import com.socialite.socialite.repository.CommentDatabase
@@ -25,6 +24,11 @@ import com.socialite.socialite.repository.Event
 import com.socialite.socialite.repository.EventDatabase
 import com.socialite.socialite.utils.encodeBitmapToString
 import kotlinx.coroutines.runBlocking
+import java.text.SimpleDateFormat
+import java.time.ZoneId
+import java.time.format.DateTimeFormatter
+import java.util.Calendar
+import java.util.Locale
 
 class AddPostFragment : Fragment() {
 
@@ -37,10 +41,20 @@ class AddPostFragment : Fragment() {
         val eventTitleEditText = view?.findViewById<EditText>(R.id.eventTitle)
         val eventLocationEditText = view?.findViewById<EditText>(R.id.eventLocation)
         val eventImage = view?.findViewById<ImageView>(R.id.imageView)
-        val eventDateEditText = view?.findViewById<EditText>(R.id.eventDate)
+
+
         val eventDescriptionEditText = view?.findViewById<EditText>(R.id.eventDescription)
+        val eventDateButton = view?.findViewById<Button>(R.id.eventDate)
         val eventDatabase: EventDatabase = EventDatabase()
         val commentDatabase: CommentDatabase = CommentDatabase()
+
+        val formatter =
+            DateTimeFormatter.ofPattern("yyyy-MM-dd")
+                .withZone(ZoneId.systemDefault())
+
+        var eventDate = Timestamp.now()
+
+        eventDateButton?.text = formatter.format(Timestamp.now().toDate().toInstant())
 
 
         val pickMedia =
@@ -75,7 +89,7 @@ class AddPostFragment : Fragment() {
         view?.findViewById<FloatingActionButton>(R.id.postEventButton)?.setOnClickListener {
             val title = eventTitleEditText?.text.toString()
             val location = eventLocationEditText?.text.toString()
-            val start = eventDateEditText?.text.toString()
+            val start = eventDateButton?.text.toString()
             val description = eventDescriptionEditText?.text.toString()
             val image: String = encodeBitmapToString(eventImage?.drawable!!.toBitmap())
 
@@ -88,7 +102,7 @@ class AddPostFragment : Fragment() {
                     title,
                     description,
                     location,
-                    Timestamp.now(),
+                    eventDate,
                     0,
                     image
                 )
@@ -98,14 +112,41 @@ class AddPostFragment : Fragment() {
             eventTitleEditText?.text?.clear()
             eventLocationEditText?.text?.clear()
             eventImage?.setImageResource(R.drawable.ic_launcher_background)
-            eventDateEditText?.text?.clear()
+            eventDateButton?.text = ""
             eventDescriptionEditText?.text?.clear()
 
             Toast.makeText(requireContext(), "Event created!", Toast.LENGTH_SHORT).show()
 
+
             //navigate to home fragment
             activity?.supportFragmentManager?.popBackStack()
         }
+
+        val cal = Calendar.getInstance()
+
+        val dateSetListener =
+            DatePickerDialog.OnDateSetListener { view, year, monthOfYear, dayOfMonth ->
+                // Update the calendar with the selected date
+                cal.set(Calendar.YEAR, year)
+                cal.set(Calendar.MONTH, monthOfYear)
+                cal.set(Calendar.DAY_OF_MONTH, dayOfMonth)
+
+                // Update the button text with the selected date
+                eventDateButton?.text = formatter.format(cal.time.toInstant())
+
+                // Update the eventDate with the selected date
+                eventDate = Timestamp(cal.time)
+            }
+
+        eventDateButton?.setOnClickListener {
+            DatePickerDialog(
+                requireContext(), dateSetListener,
+                cal.get(Calendar.YEAR),
+                cal.get(Calendar.MONTH),
+                cal.get(Calendar.DAY_OF_MONTH)
+            ).show()
+        }
+
 
 
         eventImage?.setOnClickListener {
