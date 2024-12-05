@@ -51,6 +51,7 @@ class EventDetailsActivity : AppCompatActivity() {
 
         val likeButton = findViewById<ImageButton>(R.id.like_event)
         val commentEventButton = findViewById<ImageButton>(R.id.comment_event)
+        val commentCounter = findViewById<TextView>(R.id.commentCount)
         val commentInputLayout = findViewById<LinearLayout>(R.id.commentInputLayout)
         val commenterNameInput = findViewById<EditText>(R.id.commenterNameInput)
         val commentTextInput = findViewById<EditText>(R.id.commentTextInput)
@@ -65,6 +66,8 @@ class EventDetailsActivity : AppCompatActivity() {
         var comments = runBlocking {
             commentDatabase.getAllCommentsForEvent(event.id!!)
         }
+
+        commentCounter.text = comments.size.toString()
 
         val adapter = CommentAdapter(comments)
 
@@ -162,6 +165,7 @@ class EventDetailsActivity : AppCompatActivity() {
 
                     val newAdapter = CommentAdapter(comments)
                     commentsRecyclerView.adapter = newAdapter
+
                 }
 
                 // Hide the comment input layout
@@ -170,6 +174,7 @@ class EventDetailsActivity : AppCompatActivity() {
                 // Clear the input fields
                 commenterNameInput.text.clear()
                 commentTextInput.text.clear()
+                commentCounter.text = (commentCounter.text.toString().toInt() + 1).toString()
             }
         }
     }
